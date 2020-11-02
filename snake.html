@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html> lang="en">
+<html> <lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,12 +13,17 @@
     canvas {
     border :10px solid #f7347a;
     }
-
+h1{
+    font-family:'Avenir Next', Verdana;
+    font-weight: bold;
+}
     </style>
 </head>
 
 <body>
 <canvas width="800" height="800"></canvas>
+<h1> Bejby Snejk</h1>
+
 
 <script>
 // listeners
@@ -26,21 +31,29 @@ document.addEventListener('keydown', keyPush)
 
 
 //canvas
-const canvas = document.querySelector('canvas')
-const ctx = canvas.getContext('2d')
+const canvas = document.querySelector('canvas');
+const title = document.querySelector('h1');
+const ctx = canvas.getContext('2d');
 
 //player
-const snakeSize = 30; 
+const snakeSize = 40; 
 
-let snakeSpeed = 3;
+let snakeSpeed = snakeSize;
 let snakePosX = 0
-let snakePosY = canvas.height/2 -snakeSize/2;
+let snakePosY = canvas.height/2;
 
 let velocityX = 0;
 let velocityY = 0;
 
-const tileCountX = canvas.width/snakeSize;
+// game
+const tileCountX = canvas.width/snakeSize; //pocet Dlazd
 const tileCountY = canvas.height/snakeSize;
+
+let score = 0;
+
+//fooooooooooooooood
+let foodPosX = 0;
+let foodPosY = 0;
 
 //loop
 function gameLoop(){
@@ -49,6 +62,7 @@ moveStuff();
 setTimeout(gameLoop, 1000 / 15);  // pre rychlejsi framerate requestAnimationFrame(gameLoop);
 }
 
+resetFood(); //po spusteni hry sa resetne pozicia jedla
 gameLoop();
 
 //
@@ -59,17 +73,25 @@ function moveStuff(){
 snakePosX += snakeSpeed * velocityX;
 snakePosY += snakeSpeed * velocityY;
 
-if(snakePosX > canvas.width){
+
+// wall collision
+if(snakePosX > canvas.width - snakeSize){ //kontrola laveho horneho rohu, preto -snakeSize
 snakePosX = 0;
 }
-if (snakePosX < -snakeSize){
+if (snakePosX < 0){
 snakePosX = canvas.width;
 }
-if(snakePosY > canvas.height){
+if(snakePosY > canvas.height - snakeSize){
 snakePosY = 0;
 }
-if (snakePosY < -snakeSize){
+if (snakePosY < 0){
 snakePosY = canvas.height;
+}
+// food collision
+if (snakePosX == foodPosX && snakePosY == foodPosY){
+    title.textContent = ++score;
+    resetFood();
+    
 }
 }
 
@@ -85,6 +107,9 @@ rectangle("gray", 0, 0, canvas.width, canvas.height)
 //grid
 drawGrid();
 
+//food
+rectangle("red",foodPosX, foodPosY, snakeSize, snakeSize)
+
 //snake
 rectangle("green", snakePosX,snakePosY, snakeSize, snakeSize)
 
@@ -93,6 +118,12 @@ rectangle("green", snakePosX,snakePosY, snakeSize, snakeSize)
 function rectangle(color, x, y, width, height){
 ctx.fillStyle = color;
 ctx.fillRect (x, y, width, height);
+}
+
+// Randomize food position
+function resetFood(){
+    foodPosX = Math.floor(Math.random() * tileCountX) * snakeSize; //math.floor=zaukruhli random cislo
+    foodPosY = Math.floor(Math.random() * tileCountY) * snakeSize; //math.
 }
 //
 // KEYBOARD
