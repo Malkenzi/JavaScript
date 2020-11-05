@@ -6,12 +6,12 @@
     <title>Im the most dangerous little snakee BEJBY</title>
     <style>
     body {
-    background: #ffbf00;
+    background: #228B22;
     text-align: center;
     }
 
     canvas {
-    border :10px solid #f7347a;
+    border :10px solid #A52A2A;
     }
 h1{
     margin-top: 0;
@@ -40,8 +40,8 @@ const ctx = canvas.getContext('2d');
 // game
 let gameIsRunning = true;
 
-const fps = 15;
-const tileSize = 40;
+const fps = 10;
+const tileSize = 25;
 const tileCountX = canvas.width / tileSize; //pocet Dlazd
 const tileCountY = canvas.height / tileSize;
 
@@ -141,11 +141,11 @@ rectangle("red",foodPosX, foodPosY, tileSize, tileSize)
 
 // tail
 tail.forEach((snakePart) =>
-rectangle('#555', snakePart.x, snakePart.y, tileSize, tileSize)
+rectangle('#FFA500', snakePart.x, snakePart.y, tileSize, tileSize)
 );
 
 // snake
-rectangle("green", snakePosX,snakePosY, tileSize, tileSize)
+rectangle("#800000", snakePosX,snakePosY, tileSize, tileSize)
 
 }
 // draw rectangle
@@ -158,13 +158,27 @@ ctx.fillRect (x, y, width, height);
 function resetFood(){
     foodPosX = Math.floor(Math.random() * tileCountX) * tileSize; //math.floor=zaukruhli random cislo
     foodPosY = Math.floor(Math.random() * tileCountY) * tileSize; //math.
+
+    // try to dont spawn food on snakes head
+    if( foodPosX == snakePosX && foodPosY == snakePosY ) {
+        resetFood();
+
+    // dont spawn food on any snake part of his tail
+    }
+    if ( tail.some((snakePart) => snakePart.x == foodPosX && foodPosY == snakePosY)){
+        resetFood();
+    }
 }
 
 // game over
+// where keyboard restarting game
 
 function gameOver(){
-    title.innerHTML = score + "  Amaterizmus !"; //
-    //alert("Amateeeeeeeeeer! ");
+    if(score <5){
+        title.innerHTML = "Len " + score + " body ? Pff... Amaterizmus !";
+    }else{
+        title.innerHTML = "Len " + score + " bodov ? Pff... Amaterizmus !";
+    }
     gameIsRunning = false;
 }
 
@@ -206,7 +220,7 @@ function keyPush(event){
 function drawGrid(){
     for(let i =0; i < tileCountX; i++){
     for(let j =0; j < tileCountY; j++){
-    rectangle ("#fff",tileSize * i,tileSize *j ,tileSize-1,tileSize-1 );
+    rectangle ("#9ACD32",tileSize * i,tileSize *j ,tileSize-1,tileSize-1 );
 }
 }
 }
